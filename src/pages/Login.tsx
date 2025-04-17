@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabase.config';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/src/components/ui/card';
+import { Input } from '@/src/components/ui/input';
+import { Button } from '@/src/components/ui/button';
 
 const imgBg =
   'https://upload.wikimedia.org/wikipedia/commons/9/91/Pizza-3007395.jpg';
@@ -55,68 +63,66 @@ export default function Login() {
       ></div>
 
       <div className="w-1/2 flex items-center justify-center bg-gradient-to-r from-pink-100 via-indigo-100 to-blue-100 p-8">
-        <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
-          {<img src={logo} alt="Logo" className="mb-6 w-32 h-auto mx-auto" />}
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <img src={logo} alt="Logo" className="mb-2 w-32 h-auto mx-auto" />
+            <CardTitle className="text-2xl">
+              {isRegistering ? 'Cadastre-se' : 'Login'}
+            </CardTitle>
+          </CardHeader>
 
-          <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
-            {isRegistering ? 'Cadastre-se' : 'Login'}
-          </h2>
-
-          <form
-            onSubmit={isRegistering ? handleRegister : handleLogin}
-            className="w-full"
-          >
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full p-3 mb-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <input
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full p-3 mb-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
-            <button
-              type="submit"
-              className="w-full p-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition duration-300"
+          <CardContent>
+            <form
+              onSubmit={isRegistering ? handleRegister : handleLogin}
+              className="space-y-4"
             >
-              {isRegistering ? 'Criar Conta' : 'Entrar'}
-            </button>
-          </form>
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <Input
+                type="password"
+                placeholder="Senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
 
-          <p className="mt-4 text-sm text-gray-500 text-center">
-            {isRegistering ? (
-              <>
-                Já tem uma conta?{' '}
-                <button
-                  onClick={() => setIsRegistering(false)}
-                  className="text-indigo-500 hover:text-indigo-600"
-                >
-                  Faça login
-                </button>
-              </>
-            ) : (
-              <>
-                Não tem uma conta?{' '}
-                <button
-                  onClick={() => setIsRegistering(true)}
-                  className="text-indigo-500 hover:text-indigo-600"
-                >
-                  Cadastre-se
-                </button>
-              </>
-            )}
-          </p>
-        </div>
+              {error && <p className="text-sm text-red-500">{error}</p>}
+
+              <Button className="w-full" type="submit">
+                {isRegistering ? 'Criar Conta' : 'Entrar'}
+              </Button>
+            </form>
+
+            <p className="mt-4 text-sm text-center text-gray-500">
+              {isRegistering ? (
+                <>
+                  Já tem uma conta?{' '}
+                  <button
+                    onClick={() => setIsRegistering(false)}
+                    className="text-indigo-500 hover:underline"
+                  >
+                    Faça login
+                  </button>
+                </>
+              ) : (
+                <>
+                  Não tem uma conta?{' '}
+                  <button
+                    onClick={() => setIsRegistering(true)}
+                    className="text-indigo-500 hover:underline"
+                  >
+                    Cadastre-se
+                  </button>
+                </>
+              )}
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

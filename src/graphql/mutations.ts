@@ -26,13 +26,18 @@ export const CREATE_USER = gql`
 `;
 
 export const CREATE_ORDER_MUTATION = gql`
-  mutation CreateOrder($item: String!) {
-    createOrder(item: $item) {
+  mutation CreateOrder($input: CreateOrderInput!) {
+    createOrder(input: $input) {
       id
       customer
-      item
       status
       created_at
+      items {
+        name
+        quantity
+        size
+        flavors
+      }
     }
   }
 `;
