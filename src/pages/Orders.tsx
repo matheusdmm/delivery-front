@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREATE_ORDER_MUTATION } from '../graphql/mutations';
+import { CREATE_ORDER } from '../graphql/mutations';
 import { supabase } from '../../supabase.config';
 import { Checkbox } from '@/src/components/ui/checkbox';
 import { Label } from '@/src/components/ui/label';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent } from '@/src/components/ui/card';
+
+import { Header } from '../components/Header';
 
 const foodOptions = [
   { name: 'Pizza', size: 'Grande', flavors: ['Calabresa', 'Chocolate'] },
@@ -17,9 +19,7 @@ const foodOptions = [
 const Orders = () => {
   const [customer, setCustomer] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [createOrder, { data, loading, error }] = useMutation(
-    CREATE_ORDER_MUTATION
-  );
+  const [createOrder, { data, loading, error }] = useMutation(CREATE_ORDER);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -50,7 +50,7 @@ const Orders = () => {
         name: item.name,
         quantity: 1,
         size: item.size,
-        flavors: item.flavors,
+        flavors: item.flavors ?? [],
       }));
 
     try {
@@ -68,50 +68,94 @@ const Orders = () => {
     }
   };
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-white p-4">
-      <Card className="w-full max-w-md shadow-xl">
-        <CardContent className="p-6 space-y-6">
-          <h2 className="text-2xl font-bold text-center">Criar Pedido</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <fieldset className="space-y-4">
-              {foodOptions.map((item) => (
-                <div key={item.name} className="flex items-center space-x-2">
+  const renderFoodOptions = (item: (typeof foodOptions)[0]) => {
+    if (item.name === 'Refrigerante') {
+      return (
+        <div key={item.name} className="space-y-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id={item.name}
+              checked={selectedItems.includes(item.name)}
+              onCheckedChange={() => handleToggleItem(item.name)}
+            />
+            <Label htmlFor={item.name} className="text-sm">
+              {item.name} ({item.size})
+            </Label>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div key={item.name} className="space-y-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id={item.name}
+              checked={selectedItems.includes(item.name)}
+              onCheckedChange={() => handleToggleItem(item.name)}
+            />
+            <Label htmlFor={item.name} className="text-sm">
+              {item.name} ({item.size})
+            </Label>
+          </div>
+          {item.flavors && item.flavors.length > 0 && (
+            <div className="ml-4 space-y-2">
+              <span className="text-xs font-medium">Sabores:</span>
+              {item.flavors.map((flavor) => (
+                <div key={flavor} className="flex items-center space-x-2">
                   <Checkbox
-                    id={item.name}
-                    checked={selectedItems.includes(item.name)}
-                    onCheckedChange={() => handleToggleItem(item.name)}
+                    id={flavor}
+                    checked={selectedItems.includes(flavor)}
+                    onCheckedChange={() => handleToggleItem(flavor)}
                   />
-                  <Label htmlFor={item.name} className="text-sm">
-                    {item.name} ({item.size})
+                  <Label htmlFor={flavor} className="text-sm">
+                    {flavor}
                   </Label>
                 </div>
               ))}
-            </fieldset>
-
-            <Button
-              type="submit"
-              disabled={!customer || selectedItems.length === 0}
-              className="w-full"
-            >
-              Fazer Pedido
-            </Button>
-          </form>
-
-          {loading && (
-            <p className="text-sm text-gray-600">Enviando pedido...</p>
-          )}
-          {error && (
-            <p className="text-sm text-red-500">Erro: {error.message}</p>
-          )}
-          {data && (
-            <div className="text-sm text-green-600">
-              Pedido criado com sucesso! ID: {data.createOrder.id}
             </div>
           )}
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      );
+    }
+  };
+
+  return (
+    <>
+      <Header />
+
+      <div className="flex min-h-screen items-center justify-center bg-white p-4">
+        <Card className="w-full max-w-md shadow-xl">
+          <CardContent className="p-6 space-y-6">
+            <h2 className="text-2xl font-bold text-center">Criar Pedido</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <fieldset className="space-y-4">
+                {foodOptions.map((item) => renderFoodOptions(item))}
+              </fieldset>
+
+              <Button
+                type="submit"
+                disabled={!customer || selectedItems.length === 0}
+                className="w-full"
+              >
+                Fazer Pedido
+              </Button>
+            </form>
+
+            {loading && (
+              <p className="text-sm text-gray-600">Enviando pedido...</p>
+            )}
+            {error && (
+              <p className="text-sm text-red-500">Erro: {error.message}</p>
+            )}
+            {data && (
+              <div className="text-sm text-green-600">
+                Pedido criado com sucesso! ID: {data.createOrder.id}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 };
 

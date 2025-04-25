@@ -2,18 +2,23 @@ import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { supabase } from '../../supabase.config';
 
+const url = 'http://localhost:3030/';
+
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3030/',
+  uri: url,
 });
 
 const authLink = setContext(async (_, { headers }) => {
-  const { data } = await supabase.auth.getSession();
-  const token = data.session?.access_token;
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const token = session?.access_token;
 
   return {
     headers: {
       ...headers,
-      Authorization: token ? `Bearer ${token}` : '',
+      authorization: token ? `Bearer ${token}` : '',
     },
   };
 });

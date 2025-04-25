@@ -11,10 +11,9 @@ export const LOGIN_MUTATION = gql`
 
 // Mutation para criar um pedido
 export const CREATE_ORDER = gql`
-  mutation CreateOrder($product: String!, $quantity: Int!) {
-    createOrder(product: $product, quantity: $quantity) {
+  mutation CreateOrder($input: CreateOrderInput!) {
+    createOrder(input: $input) {
       id
-      status
     }
   }
 `;
@@ -22,22 +21,5 @@ export const CREATE_ORDER = gql`
 export const CREATE_USER = gql`
   mutation CreateUser($email: String!, $password: String!) {
     createUser(email: $email, password: $password)
-  }
-`;
-
-export const CREATE_ORDER_MUTATION = gql`
-  mutation CreateOrder($input: CreateOrderInput!) {
-    createOrder(input: $input) {
-      id
-      customer
-      status
-      created_at
-      items {
-        name
-        quantity
-        size
-        flavors
-      }
-    }
   }
 `;
