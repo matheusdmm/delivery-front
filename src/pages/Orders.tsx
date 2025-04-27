@@ -7,7 +7,7 @@ import { Label } from '@/src/components/ui/label';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent } from '@/src/components/ui/card';
 
-import { Header } from '../components/Header';
+import { Navbar } from '../components/Navbar';
 
 const foodOptions = [
   { name: 'Pizza', size: 'Grande', flavors: ['Calabresa', 'Chocolate'] },
@@ -121,7 +121,10 @@ const Orders = () => {
 
   return (
     <>
-      <Header />
+      <Navbar />
+
+
+
 
       <div className="flex min-h-screen items-center justify-center bg-white p-4">
         <Card className="w-full max-w-md shadow-xl">

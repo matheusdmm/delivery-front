@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
 
-// Mutation para login
 export const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -9,7 +8,6 @@ export const LOGIN_MUTATION = gql`
   }
 `;
 
-// Mutation para criar um pedido
 export const CREATE_ORDER = gql`
   mutation CreateOrder($input: CreateOrderInput!) {
     createOrder(input: $input) {
