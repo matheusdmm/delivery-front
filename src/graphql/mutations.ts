@@ -21,3 +21,19 @@ export const CREATE_USER = gql`
     createUser(email: $email, password: $password)
   }
 `;
+
+export const GET_MY_ORDERS = gql`
+  query GetMyOrders {
+    myOrders {
+      id
+      customer
+      items {
+        name
+        quantity
+        size
+        flavors
+      }
+      status
+    }
+  }
+`;
